@@ -17,14 +17,13 @@ import { configValidationSchema } from './config.schema';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        const isProd = configService.get('NODE_ENV') === 'prod';
-
+        const dbUrl = configService.get<string>('DATABASE_URL');
         return {
           type: 'postgres',
-          url: configService.get<string>('DATABASE_URL'),
+          url: dbUrl,
           autoLoadEntities: true,
           synchronize: true,
-          ssl: isProd ? { rejectUnauthorized: false } : false,
+          ssl: { rejectUnauthorized: false },
         };
       },
     }),
